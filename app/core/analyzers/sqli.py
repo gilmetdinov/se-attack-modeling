@@ -140,7 +140,7 @@ class SQLiAnalyzer(BaseAnalyzer):
             f"allowing attacker to inject arbitrary SQL commands.\n\n"
             f"**Detection method:** {sqli_type}\n"
             f"**Payload used:** `{successful_payload.payload}`\n"
-            f"**Evidence:** `{successful_payload.evidence[:200]}`\n\n"
+            f"**Evidence:** `{(successful_payload.evidence or '')[:200]}`\n\n"
             f"**Attack scenario:**\n"
             f"1. Attacker identifies injectable parameter\n"
             f"2. Crafts malicious SQL payload to extract data or modify database\n"

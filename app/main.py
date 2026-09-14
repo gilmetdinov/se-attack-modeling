@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from config import cur_lang
+from config import cur_lang, CORS_ORIGINS
 from enums import Lang
 from routers import auth, users, scans, cwe
 from utils.logging import app_logger
@@ -25,11 +25,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# TODO: do we really need CORS for frontend?
+# CORS: разрешённые origin из env (config.CORS_ORIGINS).
+# "allow_credentials" с wildcard "*" несовместим — поэтому при "*" креды отключаем.
+_cors_wildcard = CORS_ORIGINS == ["*"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=["*"] if _cors_wildcard else CORS_ORIGINS,
+    allow_credentials=not _cors_wildcard,
     allow_methods=["*"],
     allow_headers=["*"],
 )

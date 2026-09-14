@@ -1,5 +1,8 @@
 .venv
 *.pyc
+__pycache__/
+.pytest_cache/
+.env
 logs/*
 app/logs/*
 db/data/*

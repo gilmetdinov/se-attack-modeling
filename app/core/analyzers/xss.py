@@ -104,7 +104,7 @@ class XSSAnalyzer(BaseAnalyzer):
             f"The application reflects user input without proper sanitization, allowing execution "
             f"of arbitrary JavaScript code in victim's browser.\n\n"
             f"**Payload used:** `{successful_payload.payload}`\n"
-            f"**Evidence:** `{successful_payload.evidence[:200]}`\n\n"
+            f"**Evidence:** `{(successful_payload.evidence or '')[:200]}`\n\n"
             f"**Attack scenario:**\n"
             f"1. Attacker crafts malicious URL/form with XSS payload\n"
             f"2. Victim visits the URL or submits the form\n"

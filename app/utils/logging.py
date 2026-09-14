@@ -3,8 +3,10 @@ from logging.handlers import RotatingFileHandler
 import os
 
 def setup_logging():
-    """Настройка системного логирования"""
-    log_dir = "/app/logs"
+    """Настройка системного логирования."""
+    # Лог-директория из env (в контейнере — /app/logs), иначе локально рядом с приложением.
+    default_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
+    log_dir = os.getenv("LOG_DIR", default_dir)
     os.makedirs(log_dir, exist_ok=True)
     
     log_file = os.path.join(log_dir, "attack_modeling.log")

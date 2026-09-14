@@ -12,6 +12,14 @@ services:
     environment:
       - CHROME_BIN=/usr/bin/chromium
       - CHROMEDRIVER=/usr/bin/chromedriver
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-admin}
+      - DB_PASS=${DB_PASS:-change-me}
+      - DB_NAME=${DB_NAME:-attack_modeling}
+      - SECRET_KEY=${SECRET_KEY:-}
+      - API_KEY=${API_KEY:-}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost,http://localhost:80}
 
   db:
     image: postgres:14
@@ -20,9 +28,9 @@ services:
     volumes:
       - ./db/data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: "attack_modeling"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: ${DB_NAME:-attack_modeling}
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASS:-change-me}
     ports:
       - "5432:5432"
   

@@ -5,6 +5,7 @@ from sqlalchemy import select
 from typing import Optional
 
 from database import get_db
+from config import API_KEY
 from models.user import User, UserStatusEnum, UserRoleEnum
 from utils.security import decode_access_token
 from utils.logging import app_logger
@@ -79,20 +80,24 @@ async def verify_api_key_header(
     x_api_key: Optional[str] = Header(None),
     db: AsyncSession = Depends(get_db)
 ) -> User:
-    """TODO: Нужна таблица api_keys или поле api_key_hash в users. текущий глобальный API ключ - `123456`"""
+    """Legacy header-авторизация по X-API-Key. Ключ задаётся через env API_KEY.
+
+    Пустое значение API_KEY (по умолчанию) отключает фичу. TODO: заменить на
+    таблицу api_keys / поле api_key_hash в users.
+    """
+    if not API_KEY:
+        raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED,
+                            detail="API key auth is not configured")
     if not x_api_key:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="API key required"
         )
-    if x_api_key != '123456':
+    if x_api_key != API_KEY:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Bad API key"
         )
-
-    # TODO: Проверка по базе данных. Пока что хардкод для MVP    
-    # raise HTTPException(status_code=501, detail="API key auth not implemented yet")
 
 
 # ========== РОЛЕВЫЕ DEPENDENCIES ==========
